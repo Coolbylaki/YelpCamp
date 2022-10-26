@@ -16,6 +16,7 @@ async function main() {
 // Configure express and ejs
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
+app.use(express.urlencoded({ extended: true }))
 
 // Home route
 app.get("/", (req, res) => {
@@ -26,6 +27,18 @@ app.get("/", (req, res) => {
 app.get("/campgrounds", async (req, res) => {
     const campgrounds = await Campground.find({})
     res.render("campgrounds/index", { campgrounds })
+})
+
+// Create campground get route
+app.get("/campgrounds/new", (req, res) => {
+    res.render("campgrounds/new")
+})
+
+// Create campground post route
+app.post("/campgrounds", async (req, res) => {
+    const campground = new Campground(req.body.campground)
+    await campground.save()
+    res.redirect(`/campgrounds/${campground.id}`)
 })
 
 // Show route
