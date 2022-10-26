@@ -2,7 +2,7 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const methodOverride = require("method-override")
-const port = 3000;
+const port = 3000
 const app = express()
 const Campground = require("./models/campground")
 
@@ -17,19 +17,22 @@ async function main() {
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-// Home get route
+// Home route
 app.get("/", (req, res) => {
     res.render("home")
 })
 
-// Test database get route
-app.get("/makecampground", async (req, res) => {
-    const camp = new Campground({
-        title: "My Backyard",
-        description: "Cheap camping!"
-    })
-    await camp.save();
-    res.send(camp)
+// Index route
+app.get("/campgrounds", async (req, res) => {
+    const campgrounds = await Campground.find({})
+    res.render("campgrounds/index", { campgrounds })
+})
+
+// Show route
+app.get("/campgrounds/:id", async (req, res) => {
+    const id = req.params.id
+    const campground = await Campground.findById(id)
+    res.render("campgrounds/show", { campground })
 })
 
 // Starting up app on desired port
