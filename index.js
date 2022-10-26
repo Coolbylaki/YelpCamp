@@ -48,16 +48,25 @@ app.get("/campgrounds/:id", async (req, res) => {
     res.render("campgrounds/show", { campground })
 })
 
-// Edit campground route
+// Edit campground get route
 app.get("/campgrounds/:id/edit", async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     res.render("campgrounds/edit", { campground })
 })
 
+// Edit campground put route
 app.put("/campgrounds/:id", async (req, res) => {
     const id = req.params.id
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     res.redirect(`/campgrounds/${id}`)
+})
+
+// Delete campground route
+app.delete("/campgrounds/:id", async (req, res) => {
+    const id = req.params.id
+    await Campground.findByIdAndDelete(id)
+    res.redirect("/campgrounds")
+
 })
 
 // Starting up app on desired port
