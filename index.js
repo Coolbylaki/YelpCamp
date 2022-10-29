@@ -5,6 +5,7 @@ const methodOverride = require("method-override")
 const port = 3000
 const app = express()
 const Campground = require("./models/campground")
+const ejsMate = require("ejs-mate")
 
 // Connect to MongoDB
 main().catch(err => console.log(err))
@@ -14,6 +15,7 @@ async function main() {
 }
 
 // Configure express and ejs
+app.engine("ejs", ejsMate)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }))
@@ -21,7 +23,7 @@ app.use(methodOverride("_method"))
 
 // Home route
 app.get("/", (req, res) => {
-    res.render("home")
+    res.send("Go to campgrounds")
 })
 
 // Show campgrounds route
