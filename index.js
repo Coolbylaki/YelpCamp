@@ -5,6 +5,8 @@ const methodOverride = require("method-override")
 const port = 3000
 const app = express()
 const Campground = require("./models/campground")
+const asyncWrapper = require("./utilities/asyncWrapper")
+const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
 
 // Connect to MongoDB
@@ -23,14 +25,14 @@ app.use(methodOverride("_method"))
 
 // Home route
 app.get("/", (req, res) => {
-    res.send("Go to campgrounds")
+    res.redirect("/campgrounds")
 })
 
 // Show campgrounds route
-app.get("/campgrounds", async (req, res) => {
+app.get("/campgrounds", asyncWrapper(async (req, res) => {
     const campgrounds = await Campground.find({})
     res.render("campgrounds/index", { campgrounds })
-})
+}))
 
 // New campground get route
 app.get("/campgrounds/new", (req, res) => {
@@ -38,42 +40,37 @@ app.get("/campgrounds/new", (req, res) => {
 })
 
 // New campground post route
-app.post("/campgrounds", async (req, res, next) => {
-    try {
-        const campground = new Campground(req.body.campground)
-        await campground.save()
-        res.redirect(`/campgrounds/${campground.id}`)
-    } catch (err) {
-        next(err)
-    }
-})
+app.post("/campgrounds", asyncWrapper(async (req, res, next) => {
+    const campground = new Campground(req.body.campground)
+    await campground.save()
+    res.redirect(`/campgrounds/${campground.id}`)
+}))
 
 // Show campground route
-app.get("/campgrounds/:id", async (req, res) => {
+app.get("/campgrounds/:id", asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     res.render("campgrounds/show", { campground })
-})
+}))
 
 // Edit campground get route
-app.get("/campgrounds/:id/edit", async (req, res) => {
+app.get("/campgrounds/:id/edit", asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     res.render("campgrounds/edit", { campground })
-})
+}))
 
 // Edit campground put route
-app.put("/campgrounds/:id", async (req, res) => {
+app.put("/campgrounds/:id", asyncWrapper(async (req, res) => {
     const id = req.params.id
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     res.redirect(`/campgrounds/${id}`)
-})
+}))
 
 // Delete campground route
-app.delete("/campgrounds/:id", async (req, res) => {
+app.delete("/campgrounds/:id", asyncWrapper(async (req, res) => {
     const id = req.params.id
     await Campground.findByIdAndDelete(id)
     res.redirect("/campgrounds")
-
-})
+}))
 
 app.use((err, req, res, next) => {
     res.send("Oh boy!")
