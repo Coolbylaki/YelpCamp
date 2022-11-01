@@ -7,16 +7,34 @@
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" name="campground[title]" id="title"
                     value="<%= campground.title %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please insert a valid title.
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">location</label>
                 <input class="form-control" type="text" name="campground[location]" id="location"
                     value="<%= campground.location %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please insert a location title.
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" name="campground[image]" id="image"
                     value="<%= campground.image %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please insert a valid image url.
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="image">Campground Price</label>
@@ -25,12 +43,24 @@
                     <input type="text" value="<%= campground.price %>" class="form-control" id="price"
                         placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]"
                         required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please insert a valid price.
+                    </div>
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" name="campground[description]" id="description"
                     required><%= campground.description %></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please insert a valid description.
+                </div>
             </div>
             <div class="mb-3">
                 <button class="btn btn-info">Update Campground</button>
