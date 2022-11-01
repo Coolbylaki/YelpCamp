@@ -41,6 +41,7 @@ app.get("/campgrounds/new", (req, res) => {
 
 // New campground post route
 app.post("/campgrounds", asyncWrapper(async (req, res, next) => {
+    if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400)
     const campground = new Campground(req.body.campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground.id}`)
@@ -72,8 +73,14 @@ app.delete("/campgrounds/:id", asyncWrapper(async (req, res) => {
     res.redirect("/campgrounds")
 }))
 
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page Not Found", 404))
+})
+
 app.use((err, req, res, next) => {
-    res.send("Oh boy!")
+    const { statusCode = 500, message = "Something went wrong!" } = err
+    res.status(statusCode)
+    res.send(message)
 })
 
 // Starting up app on desired port
