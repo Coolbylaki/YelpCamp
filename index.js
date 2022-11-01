@@ -2,7 +2,7 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const methodOverride = require("method-override")
-const Joi = require("joi")
+const { campgroundJoiSchema } = require("./schemas")
 const port = 3000
 const app = express()
 const Campground = require("./models/campground")
@@ -24,6 +24,17 @@ app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride("_method"))
 
+// Joi Validation middleware
+const validateCampground = (req, res, next) => {
+    const { error } = campgroundJoiSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",")
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
+
 // Home route
 app.get("/", (req, res) => {
     res.redirect("/campgrounds")
@@ -41,22 +52,7 @@ app.get("/campgrounds/new", (req, res) => {
 })
 
 // New campground post route
-app.post("/campgrounds", asyncWrapper(async (req, res, next) => {
-    // if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400)
-    const campgroundJoiSchema = Joi.object({
-        campground: Joi.object({
-            title: Joi.string().required(),
-            price: Joi.number().required().min(0),
-            image: Joi.string().required(),
-            location: Joi.string().required(),
-            description: Joi.string().required()
-        }).required()
-    })
-    const { error } = campgroundJoiSchema.validate(req.body)
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",")
-        throw new ExpressError(msg, 400)
-    }
+app.post("/campgrounds", validateCampground, asyncWrapper(async (req, res, next) => {
     const campground = new Campground(req.body.campground)
     await campground.save()
     res.redirect(`/campgrounds/${campground.id}`)
@@ -75,7 +71,7 @@ app.get("/campgrounds/:id/edit", asyncWrapper(async (req, res) => {
 }))
 
 // Edit campground put route
-app.put("/campgrounds/:id", asyncWrapper(async (req, res) => {
+app.put("/campgrounds/:id", validateCampground, asyncWrapper(async (req, res) => {
     const id = req.params.id
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     res.redirect(`/campgrounds/${id}`)
@@ -88,10 +84,13 @@ app.delete("/campgrounds/:id", asyncWrapper(async (req, res) => {
     res.redirect("/campgrounds")
 }))
 
+// If all routes don't match throw a 404
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
 })
 
+
+// Error middleware
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err
     if (!err.message) err.message = "Oh No, Something Went Wrong!"
