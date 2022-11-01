@@ -38,10 +38,14 @@ app.get("/campgrounds/new", (req, res) => {
 })
 
 // New campground post route
-app.post("/campgrounds", async (req, res) => {
-    const campground = new Campground(req.body.campground)
-    await campground.save()
-    res.redirect(`/campgrounds/${campground.id}`)
+app.post("/campgrounds", async (req, res, next) => {
+    try {
+        const campground = new Campground(req.body.campground)
+        await campground.save()
+        res.redirect(`/campgrounds/${campground.id}`)
+    } catch (err) {
+        next(err)
+    }
 })
 
 // Show campground route
@@ -69,6 +73,10 @@ app.delete("/campgrounds/:id", async (req, res) => {
     await Campground.findByIdAndDelete(id)
     res.redirect("/campgrounds")
 
+})
+
+app.use((err, req, res, next) => {
+    res.send("Oh boy!")
 })
 
 // Starting up app on desired port
