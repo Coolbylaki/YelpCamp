@@ -6,6 +6,7 @@ const { campgroundJoiSchema } = require("./schemas")
 const port = 3000
 const app = express()
 const Campground = require("./models/campground")
+const Review = require("./models/review")
 const asyncWrapper = require("./utilities/asyncWrapper")
 const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
@@ -82,6 +83,16 @@ app.delete("/campgrounds/:id", asyncWrapper(async (req, res) => {
     const id = req.params.id
     await Campground.findByIdAndDelete(id)
     res.redirect("/campgrounds")
+}))
+
+// Post campground reviews
+app.post("/campgrounds/:id/reviews", asyncWrapper(async (req, res) => {
+    const campground = await Campground.findById(req.params.id)
+    const review = new Review(req.body.review)
+    campground.reviews.push(review)
+    await review.save()
+    await campground.save()
+    res.redirect(`/campgrounds/${campground._id}`)
 }))
 
 // If all routes don't match throw a 404
