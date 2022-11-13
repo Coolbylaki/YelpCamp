@@ -3,6 +3,7 @@ const path = require("path")
 const mongoose = require("mongoose")
 const methodOverride = require("method-override")
 const { campgroundJoiSchema } = require("./schemas")
+const { reviewJoiSchema } = require("./schemas")
 const port = 3000
 const app = express()
 const Campground = require("./models/campground")
@@ -10,6 +11,7 @@ const Review = require("./models/review")
 const asyncWrapper = require("./utilities/asyncWrapper")
 const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
+const review = require("./models/review")
 
 // Connect to MongoDB
 main().catch(err => console.log(err))
@@ -28,6 +30,16 @@ app.use(methodOverride("_method"))
 // Joi Validation middleware
 const validateCampground = (req, res, next) => {
     const { error } = campgroundJoiSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",")
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewJoiSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(",")
         throw new ExpressError(msg, 400)
@@ -86,7 +98,7 @@ app.delete("/campgrounds/:id", asyncWrapper(async (req, res) => {
 }))
 
 // Post campground reviews
-app.post("/campgrounds/:id/reviews", asyncWrapper(async (req, res) => {
+app.post("/campgrounds/:id/reviews", validateReview, asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     const review = new Review(req.body.review)
     campground.reviews.push(review)
