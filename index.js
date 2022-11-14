@@ -11,7 +11,6 @@ const Review = require("./models/review")
 const asyncWrapper = require("./utilities/asyncWrapper")
 const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
-const review = require("./models/review")
 
 // Connect to MongoDB
 main().catch(err => console.log(err))
@@ -73,7 +72,7 @@ app.post("/campgrounds", validateCampground, asyncWrapper(async (req, res, next)
 
 // Show campground route
 app.get("/campgrounds/:id", asyncWrapper(async (req, res) => {
-    const campground = await Campground.findById(req.params.id)
+    const campground = await Campground.findById(req.params.id).populate("reviews")
     res.render("campgrounds/show", { campground })
 }))
 
