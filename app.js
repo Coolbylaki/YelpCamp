@@ -8,9 +8,12 @@ const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
 const flash = require("connect-flash")
+const passport = require("passport")
+const LocalStrategy = require("passport-local")
 
 const campgrounds = require("./routes/campgrounds")
 const reviews = require("./routes/reviews")
+const User = require("./models/user")
 
 // Connect to MongoDB
 main().catch(err => console.log(err))
@@ -41,11 +44,24 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash())
 
+// Make sure passport is used after session
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 // Flash middleware before route handlers
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
     next()
+})
+
+app.get("/fakeUser", async (req, res) => {
+    const user = new User({ email: "lakipython@gmail.com", username: "coolbylaki" })
+    const newUser = await User.register(user, "chicken")
+    res.send(newUser)
 })
 
 // Routes from router
