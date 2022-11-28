@@ -3,6 +3,7 @@ const router = express.Router()
 const asyncWrapper = require("../utilities/asyncWrapper")
 const Campground = require("../models/campground")
 const { campgroundJoiSchema } = require("../schemas")
+const { isLoggedIn } = require("../middleware")
 
 // Joi Validation middleware
 const validateCampground = (req, res, next) => {
@@ -22,12 +23,12 @@ router.get("/", asyncWrapper(async (req, res) => {
 }))
 
 // New campground get route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new")
 })
 
 // New campground post route
-router.post("/", validateCampground, asyncWrapper(async (req, res, next) => {
+router.post("/", isLoggedIn, validateCampground, asyncWrapper(async (req, res, next) => {
     const campground = new Campground(req.body.campground)
     await campground.save()
     req.flash("success", "Successfully made a new campground!")
@@ -45,7 +46,7 @@ router.get("/:id", asyncWrapper(async (req, res) => {
 }))
 
 // Edit campground get route
-router.get("/:id/edit", asyncWrapper(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, asyncWrapper(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     if (!campground) {
         req.flash("error", "Cannot find that campground!")
@@ -55,7 +56,7 @@ router.get("/:id/edit", asyncWrapper(async (req, res) => {
 }))
 
 // Edit campground put route
-router.put("/:id", validateCampground, asyncWrapper(async (req, res) => {
+router.put("/:id", isLoggedIn, validateCampground, asyncWrapper(async (req, res) => {
     const id = req.params.id
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     req.flash("success", "Successfully updated campground!")
@@ -63,7 +64,7 @@ router.put("/:id", validateCampground, asyncWrapper(async (req, res) => {
 }))
 
 // Delete campground route
-router.delete("/:id", asyncWrapper(async (req, res) => {
+router.delete("/:id", isLoggedIn, asyncWrapper(async (req, res) => {
     const id = req.params.id
     await Campground.findByIdAndDelete(id)
     req.flash("success", "Successfully deleted campground!")
