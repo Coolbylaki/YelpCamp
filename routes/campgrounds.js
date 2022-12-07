@@ -20,7 +20,7 @@ router.get("/:id", asyncWrapper(campgrounds.showCampground))
 router.get("/:id/edit", isLoggedIn, isAuthor, asyncWrapper(campgrounds.renderEditForm))
 
 // Edit campground put route
-router.put("/:id", isLoggedIn, isAuthor, validateCampground, asyncWrapper(campgrounds.editCampground))
+router.put("/:id", isLoggedIn, isAuthor, validateCampground, asyncWrapper(campgrounds.updateCampground))
 
 // Delete campground route
 router.delete("/:id", isLoggedIn, isAuthor, asyncWrapper(campgrounds.deleteCampground))
