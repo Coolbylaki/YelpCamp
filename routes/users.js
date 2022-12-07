@@ -4,12 +4,10 @@ const User = require("../models/user")
 const asyncWrapper = require("../utilities/asyncWrapper")
 const router = express.Router()
 
-
 // Register show page route
 router.get("/register", (req, res) => {
     res.render("users/register")
 })
-
 
 // Register post route
 router.post("/register", asyncWrapper(async (req, res, next) => {
@@ -32,7 +30,6 @@ router.get("/login", (req, res) => {
     res.render("users/login")
 })
 
-
 // Login post route
 router.post("/login", passport.authenticate("local", {
     failureFlash: true, failureRedirect: "/login", keepSessionInfo: true
@@ -42,7 +39,6 @@ router.post("/login", passport.authenticate("local", {
     delete req.session.returnTo
     res.redirect(redirectUrl)
 })
-
 
 // Logout route
 router.get("/logout", (req, res, next) => {
