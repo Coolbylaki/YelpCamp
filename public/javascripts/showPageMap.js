@@ -8,6 +8,4 @@ const map = new mapboxgl.Map({
 });
 
 // Create a default Marker and add it to the map.
-const marker = new mapboxgl.Marker()
-	.setLngLat([12.554729, 55.70651])
-    .addTo(map);
+const marker = new mapboxgl.Marker().setLngLat([12.554729, 55.70651]).addTo(map);
