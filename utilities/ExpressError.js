@@ -1,3 +1,4 @@
+// Express error class
 class ExpressError extends Error {
     constructor(message, statusCode) {
         super()

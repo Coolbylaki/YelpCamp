@@ -1,3 +1,4 @@
+// City database pulled from web
 module.exports = [
     {
         city: "New York",

@@ -1,13 +1,13 @@
+// If we are in development mode we will require .env file
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config()
 }
 
+// All requires
 const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const methodOverride = require("method-override")
-const port = 3000
-const app = express()
 const ExpressError = require("./utilities/ExpressError")
 const ejsMate = require("ejs-mate")
 const session = require("express-session")
@@ -15,10 +15,13 @@ const flash = require("connect-flash")
 const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/user")
-
 const campgroundRoutes = require("./routes/campgrounds")
 const reviewRoutes = require("./routes/reviews")
 const userRoutes = require("./routes/users")
+
+// Express
+const app = express()
+const port = 3000
 
 // Connect to MongoDB
 main().catch(err => console.log(err))
@@ -62,12 +65,6 @@ app.use((req, res, next) => {
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
     next()
-})
-
-app.get("/fakeUser", async (req, res) => {
-    const user = new User({ email: "lakipython@gmail.com", username: "coolbylaki" })
-    const newUser = await User.register(user, "chicken")
-    res.send(newUser)
 })
 
 // Routes from router

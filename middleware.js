@@ -13,7 +13,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next()
 }
 
-// Joi Validation middleware
+// Campground Joi Validation middleware
 module.exports.validateCampground = (req, res, next) => {
     const { error } = campgroundJoiSchema.validate(req.body)
     if (error) {
@@ -46,7 +46,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     next()
 }
 
-// Validation middleware
+// Review Joi Validation middleware
 module.exports.validateReview = (req, res, next) => {
     const { error } = reviewJoiSchema.validate(req.body)
     if (error) {

@@ -2,17 +2,18 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 const Review = require("./review")
 
-// Model image Schema
+// Image schema
 const ImageSchema = new Schema({
     url: String,
     filename: String
 })
 
+// Image schema virtual 
 ImageSchema.virtual("thumbnail").get(function () {
     return this.url.replace("/upload", "/upload/w_200")
 })
 
-// Modeling our Schema
+// Campground schema
 const CampgroundSchema = new Schema({
     title: String,
     images: [ImageSchema],
@@ -42,5 +43,4 @@ CampgroundSchema.post("findOneAndDelete", async function (doc) {
     }
 })
 
-// Exporting our model
 module.exports = mongoose.model("Campground", CampgroundSchema)

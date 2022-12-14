@@ -1,3 +1,4 @@
+// Helper random descriptors
 module.exports.descriptors = [
     'Forest',
     'Ancient',
@@ -19,6 +20,7 @@ module.exports.descriptors = [
     'Diamond'
 ]
 
+// Helper random places
 module.exports.places = [
     'Flats',
     'Village',
