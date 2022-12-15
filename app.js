@@ -74,7 +74,7 @@ app.use("/", userRoutes);
 
 // Home route
 app.get("/", (req, res) => {
-	res.redirect("/campgrounds");
+	res.render("home");
 });
 
 // If all routes don't match throw a 404
