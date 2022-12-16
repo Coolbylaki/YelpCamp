@@ -3,10 +3,14 @@ const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground");
 
+// Fix deprecated mongoose
+mongoose.set("strictQuery", false);
+
 // Connect to mongoose
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
 main().catch((err) => console.log(err));
 async function main() {
-	await mongoose.connect("mongodb://localhost:27017/yelpCamp");
+	mongoose.connect(dbUrl);
 	console.log("Connection open!");
 }
 
@@ -16,7 +20,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 // Seed the database
 const seedDB = async () => {
 	await Campground.deleteMany({});
-	for (let i = 0; i < 300; i++) {
+	for (let i = 0; i < 50; i++) {
 		const random1000 = Math.floor(Math.random() * 1000);
 		const price = Math.floor(Math.random() * 20) + 10;
 		const camp = new Campground({
