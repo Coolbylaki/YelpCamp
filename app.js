@@ -22,6 +22,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const MongoStore = require("connect-mongo");
 const { scriptSrcUrls, styleSrcUrls, connectSrcUrls, fontSrcUrls } = require("./utilities/helmetConfig");
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
 
 // Express
 const app = express();
@@ -29,14 +30,6 @@ const port = 3000;
 
 // Fix deprecated mongoose
 mongoose.set("strictQuery", false);
-
-// Connect to MongoDB
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
-main().catch((err) => console.log(err));
-async function main() {
-	mongoose.connect(dbUrl);
-	console.log("Connection open!");
-}
 
 // Configure express and ejs
 app.engine("ejs", ejsMate);
@@ -135,7 +128,13 @@ app.use((err, req, res, next) => {
 	res.render("error", { err });
 });
 
-// Starting up app on desired port
-app.listen(port, () => {
-	console.log(`Serving on http://localhost:${port}`);
-});
+// Connect to MongoDB
+main().catch((err) => console.log(err));
+async function main() {
+	mongoose.connect(dbUrl);
+	console.log("Connection open!");
+	// Starting up app on desired port
+	app.listen(port, () => {
+		console.log(`Serving on http://localhost:${port}`);
+	});
+}
