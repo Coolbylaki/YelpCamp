@@ -26,7 +26,7 @@ const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
 
 // Express
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Fix deprecated mongoose
 mongoose.set("strictQuery", false);
