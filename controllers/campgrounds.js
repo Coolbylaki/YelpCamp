@@ -5,8 +5,42 @@ const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.index = async (req, res) => {
-	const campgrounds = await Campground.find({});
-	res.render("campgrounds/index", { campgrounds });
+	const campgrounds = await Campground.paginate(
+		{},
+		{
+			page: req.query.page || 1,
+			limit: 10,
+			sort: "-_id",
+		}
+	);
+	campgrounds.page = Number(campgrounds.page);
+	let totalPages = campgrounds.totalPages;
+	let currentPage = campgrounds.page;
+	let startPage;
+	let endPage;
+
+	if (totalPages <= 10) {
+		startPage = 1;
+		endPage = totalPages;
+	} else {
+		if (currentPage <= 6) {
+			startPage = 1;
+			endPage = 10;
+		} else if (currentPage + 4 >= totalPages) {
+			startPage = totalPages - 9;
+			endPage = totalPages;
+		} else {
+			startPage = currentPage - 5;
+			endPage = currentPage + 4;
+		}
+	}
+	res.render("campgrounds/index", {
+		campgrounds,
+		startPage,
+		endPage,
+		currentPage,
+		totalPages,
+	});
 };
 
 module.exports.renderNewForm = (req, res) => {

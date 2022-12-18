@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Review = require("./review");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 // Image schema
 const ImageSchema = new Schema({
@@ -63,5 +64,7 @@ CampgroundSchema.post("findOneAndDelete", async function (doc) {
 		});
 	}
 });
+
+CampgroundSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Campground", CampgroundSchema);
