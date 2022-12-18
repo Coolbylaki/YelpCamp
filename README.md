@@ -14,9 +14,13 @@ You can check out YelpCamp on following link: https://lazar-yelpcamp.onrender.co
 - EJS
 - Bootstrap
 
-## Api's used
+## Api's used:
 
 - MapBox: used to display cluster map and small minimap
 - Cloudinary: used to store all of images uploaded
 
-### **Made by Lazar Stojanović with guidance from Colt Steele**
+### Concepts learned from this bootcamp:
+
+![download](https://user-images.githubusercontent.com/74930516/208321672-43ee371a-8565-4a33-9f2b-44433603d3d1.png)
+
+#### **Made by Lazar Stojanović with guidance from Colt Steele**
