@@ -56,3 +56,11 @@ module.exports.validateReview = (req, res, next) => {
 		next();
 	}
 };
+
+// Check does our session contain where we want to return
+module.exports.checkReturnTo = (req, res, next) => {
+	if (req.session.returnTo) {
+		res.locals.returnTo = req.session.returnTo;
+	}
+	next();
+};
