@@ -30,19 +30,20 @@ module.exports.createCampground = async (req, res, next) => {
 };
 
 module.exports.showCampground = async (req, res) => {
-	const campground = await Campground.findById(req.params.id)
-		.populate({
-			path: "reviews",
-			populate: {
-				path: "author",
-			},
-		})
-		.populate("author");
-	if (!campground) {
+	if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+		const campground = await Campground.findById(req.params.id)
+			.populate({
+				path: "reviews",
+				populate: {
+					path: "author",
+				},
+			})
+			.populate("author");
+		res.render("campgrounds/show", { campground });
+	} else {
 		req.flash("error", "Cannot find that campground!");
 		res.redirect("/campgrounds");
 	}
-	res.render("campgrounds/show", { campground });
 };
 
 module.exports.renderEditForm = async (req, res) => {
