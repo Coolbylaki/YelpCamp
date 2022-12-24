@@ -5,20 +5,26 @@ This is my final project of full-stack web developer bootcamp! Site is ment to i
 You can check out YelpCamp on following link: https://lazar-yelpcamp.onrender.com/ <br>
 (I am using Render's free tier to host my website so please give it 20 seconds for it to load)
 
-## Tech used:
+## Tech stack
 
-- JavaScript
-- Node
-- Express
-- MongoDB Atlas
-- Mongoose
-- EJS
-- Bootstrap
+### Backend
++ Node
++ Express
++ MongoDB Atlas
++ Mongoose
++ Passport (authentication)
++ Joi (validation)
++ Helmet (security on HTTP requests)
 
-## Api's used:
+### Frontend
++ EJS
++ HTML
++ CSS
++ Bootstrap 5
 
-- MapBox: used to display cluster map and small minimap
-- Cloudinary: used to store all of images uploaded
+### API's used
++ Mapbox (cluster map & minimap)
++ Cloudinary (image storage)
 
 ### Concepts learned from this bootcamp:
 
