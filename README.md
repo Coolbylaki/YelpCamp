@@ -2,8 +2,7 @@
 
 This is my final project of full-stack web developer bootcamp! Site is ment to imitate Yelp but for campgrounds. After this project I am moving on to learn Vue.
 
-You can check out YelpCamp on following link: https://lazar-yelpcamp.onrender.com/ <br>
-(I am using Render's free tier to host my website so please give it 20 seconds for it to load)
+You can check out YelpCamp on following link: https://laki-yelpcamp.cyclic.app/ <br>
 
 ## Tech stack
 
